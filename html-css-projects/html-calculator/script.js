@@ -7,20 +7,14 @@ const calculate = (n1, operator, n2) => {
     // Perform calculation and return calculated value
     n1 = Number(n1);
     n2 = Number(n2);
-    let result = '';
-    if (operator === 'add') {
-        result = n1 + n2;
-    }
-    else if (operator === 'subtract') {
-        result = n1 - n2;
-    }
-    else if (operator === 'multiply') {
-        result = n1 * n2;
-    }
-    else if (operator === 'divide') {
-        result = n1 / n2;
-    }
-    return result;
+    if (operator === 'add') return n1 + n2;
+
+    if (operator === 'subtract') return n1 - n2;
+
+    if (operator === 'multiply') return n1 * n2;
+
+    if (operator === 'divide') return n1 / n2;
+
 }
 
 keys.addEventListener('click', e => {
@@ -38,7 +32,7 @@ keys.addEventListener('click', e => {
             // This must be a number key
             console.log('Number key!');   
 
-            if (displayedNum === '0' || previousKeyType === 'operator') {
+            if (displayedNum === '0' || previousKeyType === 'operator' || previousKeyType === 'calculate') {
                 display.textContent = keyContent
             }
             else {
@@ -55,7 +49,7 @@ keys.addEventListener('click', e => {
             const secondValue = displayedNum;
 
             // If we have first value and also have a operator
-            if (firstValue && operator && previousKeyType !== 'operator') {
+            if (firstValue && operator && previousKeyType !== 'operator' && previousKeyType !== 'calculate') {
                 display.textContent = calculate(firstValue, operator, secondValue);
             }
             
@@ -72,7 +66,8 @@ keys.addEventListener('click', e => {
             if (!displayedNum.includes('.')) {
                 display.textContent = displayedNum + '.';
             }
-            else if (previousKeyType === 'operator') {
+            else if (previousKeyType === 'operator' || previousKeyType === 'calculate') {
+                
                 display.textContent = '0.';
             }
             calculator.dataset.previousKeyType = action;
@@ -97,7 +92,22 @@ keys.addEventListener('click', e => {
         }
         else if (action === 'clear') {
             console.log('clear');
+            if (keyContent === 'AC') {
+                calculator.dataset.firstValue = '';
+                calculator.dataset.modValue = '';
+                calculator.dataset.operator = '';
+                calculator.dataset.previousKeyType = '';
+            }
+            else {
+                display.textContent = '0';
+            }
+            key.textContent = 'AC';
             calculator.dataset.previousKeyType = action;
+        }
+        
+        if (action !== 'clear') {
+            const clearButton = calculator.querySelector('[data-action=clear]');
+            clearButton.textContent = 'CE';
         }
     }
 })
